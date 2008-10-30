@@ -1,6 +1,7 @@
 module MechFarmer
 require 'rubygems'
 require 'net/ssh'
+require 'net/ping'
 
   class Inventory
     class << self
@@ -38,12 +39,20 @@ require 'net/ssh'
     attr_reader :session
 
     def initialize(ip)
+      @ip = ip
       begin
         @session = Net::SSH.start(ip, 'root', :timeout => 2)
         @session.exec! "hostname"
       rescue Exception
         @session = nil
       end
+    end
+
+    def alive?
+      pe = Net::PingExternal.new(@ip)
+      pt = Net::PingTCP.new(@ip,port=80,timeout=0.5)
+      return true if pe.ping or pt.ping
+      false
     end
 
     def hostname

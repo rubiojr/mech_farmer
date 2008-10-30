@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{mech_farmer}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
@@ -20,5 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<term-ansicolor>, [">= 1.0"])
   s.add_dependency(%q<net-ssh>, [">= 2.0"])
   s.add_dependency(%q<ip>, [">= 0.2"])
+  s.add_dependency(%q<net-ping>, [">= 1.2"])
   s.files = Dir["lib/**/*.rb"] #+ Dir["examples/*"]
 end

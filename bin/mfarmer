@@ -26,7 +26,7 @@ def process_ip(ip)
     puts "Ok"
   else
     puts "Failed"
-    Inventory.errors_file.puts ip
+    Inventory.errors_file.puts "#{ip}, host alive: #{rh.alive?}"
     Inventory.errors_file.flush
   end
   return dbitems
@@ -44,11 +44,9 @@ ip_list.each do |item|
   if item =~ /.*\/\d{1,2}/
     #CIDR notation
     cidr = IP::CIDR.new(item)
-    puts "generating range"
     ip_range.concat cidr.range
   else
     #single host
-    puts "parsing single host"
     ip_range << IP::Address::IPv4.new(item)
   end
 end
