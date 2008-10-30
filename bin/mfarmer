@@ -7,29 +7,14 @@ include MechFarmer
 
 def process_ip(ip)
   print "Farming ip #{ip}... "
-  dbitems = {}
   rh = RemoteHost.new(ip)
-  if not rh.session.nil?
-    dbitems['hostname'] = rh.hostname
-    pk_count = 0
-    dbitems['root_ssh_pubkeys'] = {}
-    rh.root_ssh_pubkeys.each do |k|
-      dbitems['root_ssh_pubkeys'][pk_count] = k
-      pk_count += 1
-    end
-    dbitems['users'] = rh.users
-    dbitems['routes'] = rh.routes
-    dbitems['startup_services'] = rh.startup_services
-    dbitems['firewall_policy'] = rh.firewall_policy
-    dbitems['net_devices'] = rh.net_devices
-    dbitems['ipv4_addresses'] = rh.ipv4_address
+  if rh.farm
     puts "Ok"
   else
     puts "Failed"
-    Inventory.errors_file.puts "#{ip}, host alive: #{rh.alive?}"
-    Inventory.errors_file.flush
+    return nil
   end
-  return dbitems
+  return rh
 end
 
 ip_list = ARGV
@@ -51,15 +36,21 @@ ip_list.each do |item|
   end
 end
 
-dbitems = {}
-ip_range.each do |ip|
-  result = process_ip(ip.ip_address)
-  dbitems[ip.ip_address] = result if not result.empty?
+hosts = []
+File.open 'mfarmer_errors.log', 'w' do |errors|
+  ip_range.each do |ip|
+    host = process_ip(ip.ip_address)
+    if not host.nil?
+      hosts << host
+    else
+      errors.puts "#{ip}, host alive: #{host.alive?}"
+    end
+  end
 end
 
-if not dbitems.empty?
-  puts "Writing db file..."
-  Inventory.dbfile.puts YAML.dump(dbitems)
-  Inventory.dbfile.close
-  Inventory.errors_file.close
+puts "Writing db file..."
+inv = Inventory.new
+hosts.each do |h|
+  inv.add_item h.to_hash
 end
+inv.write

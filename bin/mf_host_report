@@ -1,0 +1,19 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'mech_farmer'
+
+inventory_file = ARGV[0]
+if ARGV.size == 0 or not File.exist?(inventory_file)
+  $stderr.puts "Usage: host_status inventory_file.yaml"
+  exit 4
+end
+
+hosts = MechFarmer::RemoteHost.from_yaml(inventory_file).each do |h|
+  puts """
+#{h.hostname}
+    pubkeys:            #{h.root_ssh_pubkeys.size}
+    ip addresses:       #{h.ipv4_addresses.size}
+    users:              #{h.users.size}
+    firewall active?:   #{['DROP','REJECT'].include? h.firewall_policy['input']}
+"""
+end
