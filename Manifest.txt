@@ -1,0 +1,7 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/metch_farmer
+lib/metch_farmer.rb
+test/test_metch_farmer.rb
