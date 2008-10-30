@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{mech_farmer}
-  s.version = "0.0.1"
+  s.version = "0.0.3"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = %q{Script to farm info from servers}
   s.summary = %q{Library and utilities to analyse Apache logs}
   s.email = %q{sergio@rubio.name}
-  s.executables = [ "mfarm" ]
+  s.executables = [ "mfarmer" ]
   #s.extra_rdoc_files = ["README", "COPYING"]
   #s.has_rdoc = true
   s.homepage = %q{http://www.github.com/rubiojr/mech_farmer}
@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.4")
   s.add_dependency(%q<term-ansicolor>, [">= 1.0"])
   s.add_dependency(%q<net-ssh>, [">= 2.0"])
+  s.add_dependency(%q<ip>, [">= 0.2"])
   s.files = Dir["lib/**/*.rb"] #+ Dir["examples/*"]
 end

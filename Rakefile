@@ -20,3 +20,8 @@ task :gem_install => [:gem] do
 end
 
 task :clean => [:clean_gem]
+
+task :publish_gem do
+    `scp build/*.gem root@slmirror.csic.es:/espejo/rubygems/gems/`
+      `ssh slmirror gem generate_index -d /espejo/rubygems/`
+end

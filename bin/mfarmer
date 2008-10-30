@@ -1,0 +1,67 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'mech_farmer'
+require 'ip'
+require 'yaml'
+include MechFarmer
+
+def process_ip(ip)
+  print "Farming ip #{ip}... "
+  dbitems = {}
+  rh = RemoteHost.new(ip)
+  if not rh.session.nil?
+    dbitems['hostname'] = rh.hostname
+    pk_count = 0
+    dbitems['root_ssh_pubkeys'] = {}
+    rh.root_ssh_pubkeys.each do |k|
+      dbitems['root_ssh_pubkeys'][pk_count] = k
+      pk_count += 1
+    end
+    dbitems['users'] = rh.users
+    dbitems['routes'] = rh.routes
+    dbitems['startup_services'] = rh.startup_services
+    dbitems['firewall_policy'] = rh.firewall_policy
+    dbitems['net_devices'] = rh.net_devices
+    dbitems['ipv4_addresses'] = rh.ipv4_address
+    puts "Ok"
+  else
+    puts "Failed"
+    Inventory.errors_file.puts ip
+    Inventory.errors_file.flush
+  end
+  return dbitems
+end
+
+ip_list = ARGV
+
+if ip_list.size == 0
+  puts "Usage: #{File.basename(__FILE__)} ip1 ip2"
+  exit 4
+end
+
+ip_range = []
+ip_list.each do |item|
+  if item =~ /.*\/\d{1,2}/
+    #CIDR notation
+    cidr = IP::CIDR.new(item)
+    puts "generating range"
+    ip_range.concat cidr.range
+  else
+    #single host
+    puts "parsing single host"
+    ip_range << IP::Address::IPv4.new(item)
+  end
+end
+
+dbitems = {}
+ip_range.each do |ip|
+  result = process_ip(ip.ip_address)
+  dbitems[ip.ip_address] = result if not result.empty?
+end
+
+if not dbitems.empty?
+  puts "Writing db file..."
+  Inventory.dbfile.puts YAML.dump(dbitems)
+  Inventory.dbfile.close
+  Inventory.errors_file.close
+end
