@@ -1,0 +1,17 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'mech_farmer'
+require 'ip'
+
+file = ARGV[0]
+
+if file.nil? or not File.exist?(file)
+  puts "Usage: #{File.basename(__FILE__)} inventory_file"
+  exit 1
+end
+
+inventory = MechFarmer::Inventory.load_from_file(file)
+inventory.each do |rh|
+  output = rh.run_command! 'grep "^PermitRootLogin without-password" /etc/ssh/sshd_config'
+  puts  "#{session.host} insecure" if output.nil?
+end
