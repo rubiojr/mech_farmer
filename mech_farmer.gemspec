@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{mech_farmer}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.description = %q{Script to farm info from servers}
   s.summary = %q{Library and utilities to analyse Apache logs}
   s.email = %q{sergio@rubio.name}
-  s.executables = [ 'mfarmer', 'mf_host_report', 'mf_check_sshd_secured']
+  s.executables = [ 'mfarmer', 'mf_host_report', 'mf_check_sshd_secured',
+                    'mf_check_bad_ssh_pubkeys']
   #s.extra_rdoc_files = ["README", "COPYING"]
   #s.has_rdoc = true
   s.homepage = %q{http://www.github.com/rubiojr/mech_farmer}

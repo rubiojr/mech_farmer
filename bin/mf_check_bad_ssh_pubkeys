@@ -1,0 +1,27 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'mech_farmer'
+
+file = ARGV.shift
+bad_key = ARGV.shift
+
+if file.nil? or not File.exist?(file)
+  puts "Usage: #{File.basename(__FILE__)} inventory pubkey1 pubkey2 ..."
+  exit 1
+end
+
+if bad_key.nil? or not File.exist?(bad_key)
+  puts "Usage: #{File.basename(__FILE__)} inventory pubkey1 pubkey2 ..."
+  exit 1
+end
+
+
+bad_key = IO.readlines(bad_key).join.strip.chomp
+inventory = MechFarmer::Inventory.load_from_file(file)
+inventory.each do |rh|
+  output = rh.run_command! 'cat /root/.ssh/authorized_keys'
+  output.each_line do |key|
+    k = key.strip.chomp
+    puts "bad key in #{rh.hostname}" if k.eql? bad_key
+  end
+end
