@@ -12,7 +12,6 @@ def process_ip(ip)
     puts "Ok"
   else
     puts "Failed"
-    return nil
   end
   return rh
 end
@@ -40,17 +39,21 @@ hosts = []
 File.open 'mfarmer_errors.log', 'w' do |errors|
   ip_range.each do |ip|
     host = process_ip(ip.ip_address)
-    if not host.nil?
+    if host.farmed
       hosts << host
     else
-      errors.puts "#{ip}, host alive: #{host.alive?}"
+      errors.puts ip.ip_address
+      errors.flush
     end
   end
 end
 
-puts "Writing db file..."
-inv = Inventory.new
-hosts.each do |h|
-  inv.add_item h.to_hash
+File.open 'mfarmer_errors.log', 'a' do |errors|
+  puts "Writing db file..."
+  inv = Inventory.new
+  hosts.each do |h|
+    added = inv.add_item h
+    errors.puts "Item duplicated: #{h.hostname}" if not added
+  end
+  inv.write
 end
-inv.write
