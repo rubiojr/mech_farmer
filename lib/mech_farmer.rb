@@ -6,6 +6,55 @@ require 'timeout'
 require 'socket'
 require 'ip'
 
+  class Maintainer
+
+    attr_accessor :teams, :ssh_pubkeys, :full_name, :nickname
+
+    def initialize
+      @teams = []
+      @ssh_pubkeys = []
+      @full_name = nil
+      @nickname = nil
+    end
+
+    def self.from_yaml(file)
+      list = []
+      File.open file do |f|
+        buffer = YAML.load(f)
+        buffer.each_key do |k| 
+          obj = buffer[k]
+          m = Maintainer.new
+          m.full_name = k
+          m.teams = obj['teams']
+          m.ssh_pubkeys = obj['ssh_pubkeys']
+          m.nickname = obj['nickname']
+          list << m
+        end
+      end
+      return list
+    end
+    
+    def to_hash
+      {
+        @full_name => {
+          'email' => @email,
+          'teams' => @teams,
+          'nickname' => @nickname,
+          'ssh_pubkeys' => @ssh_pubkeys
+        }
+      }
+    end
+
+
+    def to_s
+      "Full Name:             #{@full_name}\n" +
+      "Nickname:              #{@nickname}\n" +
+      "Teams:                 #{@teams.join(',')}\n" +
+      "SSH Publibc Keys:      #{@ssh_pubkeys.size}"
+    end
+
+  end
+
   class Inventory
 
     attr_accessor :dbfile
