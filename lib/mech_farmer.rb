@@ -8,13 +8,14 @@ require 'ip'
 
   class Maintainer
 
-    attr_accessor :teams, :ssh_pubkeys, :full_name, :nickname
+    attr_accessor :teams, :ssh_pubkeys, :full_name, :nickname, :email
 
     def initialize
       @teams = []
       @ssh_pubkeys = []
       @full_name = nil
       @nickname = nil
+      @email = nil
     end
 
     def self.from_yaml(file)
@@ -28,6 +29,7 @@ require 'ip'
           m.teams = obj['teams']
           m.ssh_pubkeys = obj['ssh_pubkeys']
           m.nickname = obj['nickname']
+          m.email = obj['email']
           list << m
         end
       end
@@ -50,6 +52,7 @@ require 'ip'
       "Full Name:             #{@full_name}\n" +
       "Nickname:              #{@nickname}\n" +
       "Teams:                 #{@teams.join(',')}\n" +
+      "Email:                 #{@email}\n" +
       "SSH Publibc Keys:      #{@ssh_pubkeys.size}"
     end
 
