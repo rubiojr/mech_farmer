@@ -118,11 +118,10 @@ require 'yaml'
 
   class RemoteHost
 
-    attr_reader :session, :farmed
+    attr_reader :session, :farmed, :farming_address
     attr_writer :hostname, :root_ssh_pubkeys, :routes, :users
     attr_writer :startup_services, :net_devices, :ipv4_addresses
     attr_writer :firewall_policy
-    attr_accessor :farming_address
 
     def initialize(farming_address)
       @farming_address = farming_address
@@ -356,7 +355,7 @@ require 'yaml'
             rh.net_devices = obj['net_devices']
             rh.ipv4_addresses = obj['ipv4_addresses']
             rh.firewall_policy = obj['firewall_policy']
-            rh.farming_address = obj['farming_address']
+            rh.instance_eval "@farming_address = #{obj['farming_address']}"
             hostlist << rh
           end
         end
