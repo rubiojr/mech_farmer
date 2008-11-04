@@ -77,9 +77,15 @@ require 'yaml'
       return false
     end
 
+    def delete(hostname)
+      found = @items.find { |i| i.hostname == hostname }
+      @items.delete found
+    end
+
     def self.load_from_file(file)
       items = RemoteHost.from_yaml(file)
       inventory = Inventory.new
+      inventory.dbfile = file
       inventory.instance_eval "@items = items"
       return inventory
     end
