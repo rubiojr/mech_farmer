@@ -12,6 +12,11 @@ end
 
 inventory = MechFarmer::Inventory.load_from_file(file)
 inventory.each do |rh|
+  print "Checking #{rh.hostname}... "
   output = rh.run_command! 'grep "^PermitRootLogin without-password" /etc/ssh/sshd_config'
-  puts  "#{rh.hostname} insecure" if output.nil?
+  if output.nil?
+    puts  "Insecure"
+  else
+    puts "Ok"
+  end
 end

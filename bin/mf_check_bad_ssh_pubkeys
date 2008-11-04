@@ -19,9 +19,11 @@ end
 bad_key = IO.readlines(bad_key).join.strip.chomp
 inventory = MechFarmer::Inventory.load_from_file(file)
 inventory.each do |rh|
+  print "Checking #{rh.hostname}... "
   output = rh.run_command! 'cat /root/.ssh/authorized_keys'
   output.each_line do |key|
     k = key.strip.chomp
-    puts "bad key in #{rh.hostname}" if k.eql? bad_key
+    puts "bad key found" if k.eql? bad_key
+    puts "Ok" if not (k.eql? bad_key)
   end
 end
