@@ -99,7 +99,7 @@ require 'yaml'
     end
 
     def write(backup=true)
-      if backup
+      if backup and File.exist? @dbfile
         bf = "#{@dbfile}.bak.#{Time.now.strftime('%Y%m%d-%H:%M:%S')}"
         File.copy(@dbfile, bf)
       end
