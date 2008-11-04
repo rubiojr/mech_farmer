@@ -355,7 +355,7 @@ require 'yaml'
             rh.net_devices = obj['net_devices']
             rh.ipv4_addresses = obj['ipv4_addresses']
             rh.firewall_policy = obj['firewall_policy']
-            rh.instance_eval "@farming_address = #{obj['farming_address']}"
+            rh.instance_eval "@farming_address = '#{obj['farming_address']}'"
             hostlist << rh
           end
         end
