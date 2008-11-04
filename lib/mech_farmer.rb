@@ -5,6 +5,7 @@ require 'net/ping'
 require 'timeout'
 require 'socket'
 require 'ip'
+require 'ftools'
 
   class Maintainer
 
@@ -90,7 +91,12 @@ require 'ip'
       @items.each do |i| yield i end
     end
 
-    def write
+    def write(backup=true)
+      if backup
+        bf = "#{@dbfile}.bak.#{Time.now.strftime('%Y%m%d-%H:%M:%S')}"
+        File.copy(@dbfile, bf)
+      end
+
       File.open(@dbfile, 'w') do |f|
         inventory_object = {}
         @items.each do |item|
