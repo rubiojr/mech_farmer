@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{mech_farmer}
-  s.version = "0.0.9"
+  s.version = "0.0.10"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
